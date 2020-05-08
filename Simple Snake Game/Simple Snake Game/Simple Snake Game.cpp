@@ -4,8 +4,9 @@
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
+#include <fstream>
+#include <vector>
 
-using namespace std;
 
 bool gameOver;
 const int width = 20;
@@ -15,6 +16,46 @@ int tailX[100], tailY[100];
 int nTail; //specifies the length of the tail
 enum eDirection{STOP = 0, LEFT, RIGHT, UP, DOWN};
 eDirection dir;
+
+void save_score()
+{
+	int high_score = 0;
+
+	std::ifstream input("high_score.txt");
+	if (!input.is_open())
+	{
+		std::cout << "Can't read file\n";
+	}
+	else
+	{
+		input >> high_score;
+	}
+
+	std::ofstream output("high_score.txt");
+	if (!output.is_open())
+	{
+		std::cout << "Unable to read file\n";
+		return;
+	}
+
+	if (score > high_score)
+	{
+		output << score;
+	}
+	else
+	{
+		output << high_score;
+	}
+}
+
+void print_vector(std::vector<int> vector)
+{
+	for (int i = 0; i < vector.size(); i++)
+	{
+		std::cout << vector[i] << "\t";
+	}
+	std::cout << "\n";
+}
 
 void Setup()
 {
@@ -31,21 +72,21 @@ void Draw()
 {
     system("CLS");
     for (int i = 0; i < width + 2; i++)
-        cout << "#";
+        std::cout << "\xDC";
 
-    cout << endl;
+    std::cout << std::endl;
 
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
         {
             if (j == 0)
-                cout << "#";
+                std::cout << "\xDC";
           
             if (i == y && j == x)
-                cout << "O";
+                std::cout << "O";
             else if (i == fruitY && j == fruitX)
-                cout << "F";
+                std::cout << "\xE0"; 
             else
             {
                 bool print = false;
@@ -53,24 +94,24 @@ void Draw()
                 {
                     if (tailX[k] == j && tailY[k] == i)
                     {
-                        cout << "o";
+                        std::cout << "o";
                         print = true; 
                     }
                 }
 				if (!print)
-					cout << " ";
+					std::cout << " ";
             }      
 
 			if (j == width - 1)
-				cout << "#";
+				std::cout << "\xDC";
         }
-        cout << endl;
+        std::cout << std::endl;
     }
 
 	for (int i = 0; i < width + 2; i++)
-		cout << "#";
-    cout << endl;
-    cout << "Score: " << score << endl;
+		std::cout << "\xDC";
+    std::cout << std::endl;
+    std::cout << "Score: " << score << std::endl;
 }
 
 // using W, A, S, D keys to move the snake
@@ -81,16 +122,20 @@ void Input()
         switch (_getch()) // will return the ASCII value of the character that was pressed
         {
         case 'a':
-            dir = LEFT;
+            if (dir != RIGHT)
+                dir = LEFT;
             break;
 		case 'd':
-			dir = RIGHT;
+            if (dir != LEFT)
+			    dir = RIGHT;
 			break;
 		case 'w':
-			dir = UP;
+            if (dir != DOWN)
+			    dir = UP;
 			break;
         case 's':
-            dir = DOWN;
+            if (dir != UP)
+                dir = DOWN;
             break;
         case 'x':
             gameOver = true;
@@ -165,6 +210,7 @@ void Logic()
 
 int main()
 {
+
     Setup();
     while (!gameOver)
     {
@@ -172,7 +218,9 @@ int main()
         Input();
         Logic();
         Sleep(10); // this sleep function can slow the game speed; 10 represents 10 ms
+ 
     }
-
+    save_score();
+    system("pause");
     return 0;
 }

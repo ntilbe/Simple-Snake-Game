@@ -1,2 +1,3 @@
 ﻿  Simple Snake Game.cpp
-  Simple Snake Game.vcxproj -> C:\Users\User\source\repos\ntilbe\Simple-Snake-Game\Simple Snake Game\Debug\Simple Snake Game.exe
+G:\Visual Studio Projects\repos\ntilbe\Simple-Snake-Game\Simple Snake Game\Simple Snake Game\Simple Snake Game.cpp(53,20): warning C4018: '<': signed/unsigned mismatch
+  Simple Snake Game.vcxproj -> G:\Visual Studio Projects\repos\ntilbe\Simple-Snake-Game\Simple Snake Game\Debug\Simple Snake Game.exe
